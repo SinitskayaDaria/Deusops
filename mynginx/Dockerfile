@@ -1,12 +1,9 @@
 FROM alpine:3.18
 
-ARG USER_UID=1000
-ARG USER_GID=1000
-
 RUN apk add --no-cache nginx && \
     mkdir -p /var/lib/nginx/logs /run/nginx && \
-    addgroup -S -g $USER_GID myuser && \
-    adduser -S -u $USER_UID -G myuser myuser && \
+    addgroup -S myuser && \
+    adduser -S -G myuser myuser && \
     chown -R myuser:myuser /var/lib/nginx /run/nginx && \
     chmod -R 755 /var/lib/nginx && \
     ln -sf /dev/stdout /var/lib/nginx/logs/access.log && \
