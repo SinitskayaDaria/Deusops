@@ -6,14 +6,11 @@ node_modules
 # Исключаем временные и служебные файлы
 *.log
 *.env
-*.zip
 
 # Исключаем файлы сборки и документации
 Dockerfile*
-README.md
 *.md
 
 # Исключаем кэш и конфигурации
 npm-debug.log
-yarn.lock
 package-lock.json
