@@ -1,0 +1,8 @@
+# Dockerfile.system
+
+FROM node:18-alpine
+
+# Обновление npm, очистка кеша
+RUN npm install -g npm && \
+    npm cache clean --force && \
+    rm -rf /var/cache/apk/*

@@ -1,0 +1,22 @@
+# Dockerfile.runtime
+
+FROM node:18-alpine
+
+# Добавляем непривилегированного пользователя
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
+# Рабочая директория
+WORKDIR /app
+
+# Копируем собранный код из build
+COPY --from=myapp-build /app . 
+
+# Настройка переменных окружения
+ENV NODE_ENV=production \
+    PORT=3000
+
+# Запуск от непривилегированного пользователя
+USER appuser
+
+# Команда запуска
+CMD ["node", "src/index.js"]

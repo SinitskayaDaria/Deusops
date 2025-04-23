@@ -1,0 +1,15 @@
+# Dockerfile.build
+
+FROM myapp-system AS build
+
+# Установка зависимостей проекта
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm install --only=production && \
+    npm cache clean --force
+
+# Копируем исходный код
+COPY . .
+
+
