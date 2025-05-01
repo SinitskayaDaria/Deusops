@@ -1,0 +1,55 @@
+services:
+  db:
+    container_name: mysql
+    image: mysql:9.3.0
+    restart: always
+    ports:
+      - "3306"
+    env_file: .env
+    healthcheck:
+      test: ["CMD", "mysql", "--user=$MYSQL_USER", "--password=$MYSQL_PASSWORD", "-e", "SELECT 1"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    volumes:
+      - mysql_data:/var/lib/mysql
+  backend:
+    container_name: backend
+    env_file: .env
+    image: registry.gitlab.com/techpo/app/backend:latest
+    restart: always
+    ports:
+      - "8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z 0.0.0.0 8080 || exit 1"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+  frontend:
+    container_name: frontend
+    image: registry.gitlab.com/techpo/app/frontend
+    restart: always
+    ports:
+      - "3000"
+    depends_on:
+      backend:
+        condition: service_healthy
+  nginx:
+    container_name: nginx
+    image: nginx:1.27.5-alpine
+    ports:
+      - "80:80"
+    restart: always
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - backend
+      - frontend
+
+volumes:
+  mysql_data:
