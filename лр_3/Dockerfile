@@ -13,7 +13,7 @@ RUN go build -o server main.go
 
 # Stage: Run 
 # Используем минимальный образ Alpine для запуска
-FROM alpine:latest
+FROM alpine:3.18
 
 # Создаем непривилегированного пользователя
 RUN adduser -D appuser
